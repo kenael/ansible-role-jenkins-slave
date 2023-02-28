@@ -1,7 +1,7 @@
 ---
 - name: Install slave jenkins agent
   delegate_to: localhost
-  jenkins_script:
+  community.general.jenkins_script:
     url: '{{ master_url }}'
     user: '{{ master_username }}'
     password: '{{ master_password }}'
@@ -12,5 +12,6 @@
   register: jenkins_script
 
 - name: Set jenkins slave secret
-  set_fact:
+  ansible.builtin.set_fact:
     jenkins_slave_secret: '{{ jenkins_script.output }}'
+...

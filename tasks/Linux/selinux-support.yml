@@ -1,6 +1,6 @@
 ---
 - name: Install ansible selinux support library
-  package:
+  ansible.builtin.package:
     name: "{{ (ansible_facts.python.version.major | int == 2) | ternary('libselinux-python','python3-libselinux') }}"
     state: present
   register: status
@@ -10,7 +10,7 @@
   become: true
 
 - name: Install ansible selinux configure libraries
-  package:
+  ansible.builtin.package:
     name:
       - "{{ (ansible_facts.python.version.major | int == 2) | ternary('policycoreutils-python','python3-policycoreutils') }}"
       - "{{ (ansible_facts.python.version.major | int == 2) | ternary('libsemanage-python','python3-libsemanage') }}"
@@ -23,7 +23,7 @@
   when: ansible_selinux.status == 'enabled'
 
 - name: Enable connections to HTTP port
-  seport:
+  community.general.seport:
     ports: '{{ slave_linux_selinux_ports }}'
     proto: tcp
     setype: http_port_t
@@ -32,3 +32,4 @@
   when:
     - ansible_selinux.status == 'enabled'
     - ansible_selinux.mode != 'disabled'
+...

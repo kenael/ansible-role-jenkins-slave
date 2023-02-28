@@ -1,22 +1,22 @@
 ---
 - name: Copy service file
-  win_template:
+  ansible.windows.win_template:
     src: service.cmd.j2
     dest: '{{ slave_windows_workdir }}/service.cmd'
 
 - name: Install nssm
-  win_chocolatey:
+  chocolatey.chocolatey.win_chocolatey:
     name: nssm
     state: present
 
 - name: Create a service via nssm
-  win_nssm:
+  community.windows.win_nssm:
     name: '{{ slave_windows_service }}'
     application: '{{ slave_windows_workdir }}/service.cmd'
     state: present
 
 - name: Start the service
-  win_service:
+  ansible.windows.win_service:
     name: '{{ slave_windows_service }}'
     state: started
     username: '{{ slave_windows_service_user }}'
